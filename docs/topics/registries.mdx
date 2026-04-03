@@ -103,6 +103,7 @@ Here is a complete list:
 
 - `helm pull`
 - `helm push`
+- `helm search repo`
 - `helm show `
 - `helm template`
 - `helm install`
@@ -153,6 +154,43 @@ REVISION: 2
 NOTES:
 ...
 ```
+
+### Search OCI registries
+
+Use `helm search repo` with an `oci://` reference to search for chart versions in an OCI registry. This queries the registry directly, so no local index file is needed.
+
+```console
+$ helm search repo oci://ghcr.io/stefanprodan/charts/podinfo
+NAME                                     	CHART VERSION	APP VERSION	DESCRIPTION
+oci://ghcr.io/stefanprodan/charts/podinfo	6.9.0        	6.9.0      	Podinfo Helm chart for Kubernetes
+```
+
+Use `--versions` to list multiple versions:
+
+```console
+$ helm search repo oci://ghcr.io/stefanprodan/charts/podinfo --versions
+NAME                                     	CHART VERSION	APP VERSION	DESCRIPTION
+oci://ghcr.io/stefanprodan/charts/podinfo	6.9.0        	6.9.0      	Podinfo Helm chart for Kubernetes
+oci://ghcr.io/stefanprodan/charts/podinfo	6.8.0        	6.8.0      	Podinfo Helm chart for Kubernetes
+oci://ghcr.io/stefanprodan/charts/podinfo	6.7.1        	6.7.1      	Podinfo Helm chart for Kubernetes
+oci://ghcr.io/stefanprodan/charts/podinfo	6.7.0        	6.7.0      	Podinfo Helm chart for Kubernetes
+oci://ghcr.io/stefanprodan/charts/podinfo	6.6.3        	6.6.3      	Podinfo Helm chart for Kubernetes
+```
+
+By default, Helm fetches up to 5 versions to avoid registry rate limiting. Use `--max-versions` to retrieve more:
+
+```console
+$ helm search repo oci://ghcr.io/stefanprodan/charts/podinfo --versions --max-versions=10
+```
+
+Use `--version` to filter by a semver constraint, or `--devel` to include pre-release versions:
+
+```console
+$ helm search repo oci://ghcr.io/stefanprodan/charts/podinfo --version '^6.7.0' --versions
+$ helm search repo oci://ghcr.io/stefanprodan/charts/podinfo --devel --versions
+```
+
+For private registries, log in first with `helm registry login`, and subsequent commands will use the stored credentials.
 
 ## Installing charts with digest
 
