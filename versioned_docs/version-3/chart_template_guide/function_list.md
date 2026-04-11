@@ -885,6 +885,10 @@ toToml .Item
 
 The above returns TOML string representation of `.Item`.
 
+Whole-number floats render as integers in TOML output. For example, `9` in your
+values file renders as `9` rather than `9.0`. This matches `toJson` behavior
+because YAML numbers become floating-point values after JSON round-tripping.
+
 
 ## Regular Expressions
 
