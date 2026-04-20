@@ -305,3 +305,25 @@ existing release will be upgraded.
 ```console
 $ helm upgrade --install <release name> --values <values file> <chart directory>
 ```
+
+## Create Reproducible Chart Builds
+
+When you run `helm package`, Helm uses either the current time or source file modification times for archive entry timestamps. This means packaging the same chart at different times produces archives with different checksums.
+
+To create reproducible chart archives, set the `SOURCE_DATE_EPOCH` environment variable. The value must be a decimal integer representing seconds since the Unix epoch (January 1, 1970). Helm uses this timestamp for all file modification times in the archive, so packaging the same chart multiple times produces byte-identical `.tgz` files.
+
+```console
+$ export SOURCE_DATE_EPOCH=$(date +%s)
+$ helm package mychart -d /tmp/out1
+$ helm package mychart -d /tmp/out2
+$ sha256sum /tmp/out1/mychart-*.tgz /tmp/out2/mychart-*.tgz
+# Both checksums will be identical
+```
+
+This follows the [SOURCE_DATE_EPOCH specification](https://reproducible-builds.org/docs/source-date-epoch/) used by many build tools for reproducible builds.
+
+Keep in mind:
+
+- `SOURCE_DATE_EPOCH` only affects `helm package`. Installing directly from a chart directory (`helm install ./mychart`) does not use this code path.
+- Invalid values (non-numeric or empty) are silently ignored, and Helm falls back to default timestamp behavior.
+- There is no CLI flag equivalent; you must use the environment variable.
