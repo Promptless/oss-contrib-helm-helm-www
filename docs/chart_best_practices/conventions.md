@@ -8,8 +8,8 @@ This part of the Best Practices Guide explains general conventions.
 
 ## Chart Names
 
-Chart names must be lower case letters and numbers. Words _may_ be separated
-with dashes (-):
+Chart names must contain only lowercase letters, numbers, and dashes. Names must
+start and end with a lowercase letter or number:
 
 Examples:
 
@@ -19,8 +19,14 @@ nginx-lego
 aws-cluster-autoscaler
 ```
 
-Neither uppercase letters nor underscores can be used in chart names. Dots
-should not be used in chart names.
+Invalid chart names include:
+- Names with uppercase letters (e.g., `MyChart`)
+- Names with underscores (e.g., `my_chart`)
+- Names with dots (e.g., `my.chart`)
+- Names starting with a dash (e.g., `-mychart`)
+- Names ending with a dash (e.g., `mychart-`)
+
+The `helm lint` command validates chart names against these rules.
 
 ## Version Numbers
 
