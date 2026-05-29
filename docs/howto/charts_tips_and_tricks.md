@@ -325,5 +325,5 @@ This follows the [SOURCE_DATE_EPOCH specification](https://reproducible-builds.o
 Keep in mind:
 
 - `SOURCE_DATE_EPOCH` only affects `helm package`. Installing directly from a chart directory (`helm install ./mychart`) does not use this code path.
-- Invalid values (non-numeric or empty) are silently ignored, and Helm falls back to default timestamp behavior.
-- There is no CLI flag equivalent; you must use the environment variable.
+- Invalid or negative values cause `helm package` to exit with an error.
+- SDK users can set `Package.SourceDateEpoch` programmatically instead of using the environment variable.
