@@ -55,6 +55,17 @@ Password:
 Login succeeded
 ```
 
+:::note
+Helm writes the interactive `Username:`, `Password:`, and `Token:` prompts to stderr, so they don't pollute stdout when you redirect or capture it.
+To authenticate without prompts, we recommend `--password-stdin` to read the password or identity token from stdin.
+You can also pass credentials with `-u`/`--username` and `-p`/`--password`, but a secret passed with `-p`/`--password` is exposed in your shell history and the process list.
+
+```console
+$ echo "$REGISTRY_TOKEN" | helm registry login registry.example.com -u myuser --password-stdin
+Login succeeded
+```
+:::
+
 The host must be only the registry hostname, optionally with a port. Do not include a URL scheme or path:
 
 | Example | Valid |
