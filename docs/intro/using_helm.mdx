@@ -204,6 +204,14 @@ To access your WordPress site from outside the cluster follow the steps below:
 
 The above shows the current state of your release.
 
+:::note
+In the plain-text (table) output, Helm renders the timestamps shown by `helm status` (the `LAST DEPLOYED` line), `helm history` (the `UPDATED` column), and `helm list` (the `UPDATED` column) in your local time zone.
+Helm derives the local time zone from the `TZ` environment variable, which accepts IANA time zone names such as `America/New_York` or `UTC`.
+For example, `TZ="America/New_York" helm status happy-panda` displays the timestamps in Eastern time.
+When `TZ` is unset, Helm uses the host's configured system time zone, which is often `UTC` in containers and continuous integration environments.
+The `-o json` and `-o yaml` outputs are unaffected and preserve the stored time zone offset.
+:::
+
 ### Customizing the Chart Before Installing
 
 Installing the way we have here will only use the default configuration options
@@ -402,6 +410,8 @@ rollback happens, the revision number is incremented by 1. The first revision
 number is always 1. And we can use `helm history [RELEASE]` to see revision
 numbers for a certain release.
 
+Helm renders the `UPDATED` column in your local time zone; see the note in the `helm status` section above.
+
 If a release was created by a rollback, pass `--show-rollback-revision` to
 `helm history` to add a `ROLLBACK` column to the output. This column shows which
 revision each rollback targeted.
@@ -448,6 +458,8 @@ inky-cat        1       Wed Sep 28 12:59:46 2016        DEPLOYED        alpine-0
 
 From the output above, we can see that the `happy-panda` release was
 uninstalled.
+
+As noted earlier in the `helm status` section, Helm renders the `UPDATED` column in your local time zone.
 
 In previous versions of Helm, when a release was deleted, a record of its
 deletion would remain. In Helm 3, deletion removes the release record as well.
